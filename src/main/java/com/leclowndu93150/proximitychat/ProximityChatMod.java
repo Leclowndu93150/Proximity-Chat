@@ -76,21 +76,25 @@ public class ProximityChatMod {
     }
 
     @SubscribeEvent
-    public void onChat(ServerChatEvent event) {
+    public void onChat(ServerChatEvent.Submitted event) {
         if (event.getPlayer() == null) return;
+
+        if (event.getRawText().isEmpty()) {
+            return;
+        }
 
         event.setCanceled(true);
 
         try {
             if (PartyManager.isPartyChatEnabled(event.getPlayer().getUUID())) {
                 PartyManager.getParty(event.getPlayer().getUUID()).ifPresent(party ->
-                        ChatManager.sendPartyMessage(event.getPlayer(), party, event.getMessage().getString())
+                        ChatManager.sendPartyMessage(event.getPlayer(), party, event.getRawText())
                 );
             } else {
-                ChatManager.sendProximityMessage(event.getPlayer(), event.getMessage().getString());
+                ChatManager.sendProximityMessage(event.getPlayer(), event.getRawText());
             }
         } catch (Exception e) {
-            LOGGER.error("Error processing chat message", e);
+            ProximityChatMod.LOGGER.error("Error processing chat message", e);
             event.setCanceled(false);
         }
     }
