@@ -72,14 +72,20 @@ public class ChatManager {
         for (ServerPlayer player : sender.getServer().getPlayerList().getPlayers()) {
             double distance = sender.distanceTo(player);
             if (distance <= maxDistance) {
-                Component chatMessage = Component.literal(
-                        String.format("(%dm away) [%s]: %s",
-                                (int) distance,
-                                getDisplayName(sender),
-                                message
-                        )
-                ).withStyle(color);
-                player.sendSystemMessage(chatMessage);
+                // Format: (50m away) [Player]: message
+                Component finalMessage = Component.empty()
+                        .append(Component.literal(String.format("(%dm away) ", (int)distance))
+                                .withStyle(ChatFormatting.GRAY))
+                        .append(Component.literal("[")
+                                .withStyle(color))
+                        .append(Component.literal(getDisplayName(sender))
+                                .withStyle(color))
+                        .append(Component.literal("]: ")
+                                .withStyle(color))
+                        .append(Component.literal(message)
+                                .withStyle(color));
+
+                player.sendSystemMessage(finalMessage);
             }
         }
     }

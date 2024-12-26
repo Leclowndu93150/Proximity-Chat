@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "proximitychat.refmap.json",
   "mixins": [
+    "ChatHeadsPositionMixin"
   ],
   "client": [
   ],
