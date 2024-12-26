@@ -187,14 +187,14 @@ public class ChatManager {
     }
 
     private static String getDisplayName(ServerPlayer player) {
-        // TODO: Add Fakename mod integration
-        // Check if Fakename mod is loaded and get fake name if available
         if (ModConfig.COMMON.enableFakenameIntegration.get()) {
             try {
-                // Fakename integration code would go here
-                return player.getName().getString();
+                net.minecraft.nbt.CompoundTag tag = player.getPersistentData();
+                if (tag.contains("fakename")) {
+                    return tag.getString("fakename");
+                }
             } catch (Exception e) {
-                return player.getName().getString();
+                e.printStackTrace();
             }
         }
         return player.getName().getString();

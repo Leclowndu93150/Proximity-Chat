@@ -11,12 +11,14 @@ import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.event.server.ServerStoppingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig.Type;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.fml.loading.FMLLoader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -40,11 +42,11 @@ public class ProximityChatMod {
         LOGGER.info("Proximity Chat Mod setup starting");
 
         event.enqueueWork(() -> {
-            if (ModConfig.COMMON.enableFakenameIntegration.get()) {
+            if (ModConfig.COMMON.enableFakenameIntegration.get() && ModList.get().isLoaded("fakename")) {
                 LOGGER.info("Fakename integration enabled");
             }
 
-            if (ModConfig.COMMON.enableChatHeadsIntegration.get()) {
+            if (ModConfig.COMMON.enableChatHeadsIntegration.get() && ModList.get().isLoaded("chatheads")) {
                 LOGGER.info("Chat Heads integration enabled");
             }
         });

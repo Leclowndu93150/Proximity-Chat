@@ -326,9 +326,8 @@ public class ModCommands {
                     StringBuilder memberList = new StringBuilder();
                     memberList.append("\nParty '").append(party.getName()).append("' members:\n");
 
-                    String ownerName = context.getSource().getServer()
-                            .getPlayerList().getPlayer(party.getOwner())
-                            .getName().getString();
+                    String ownerName = getPlayerDisplayName(context.getSource().getServer()
+                            .getPlayerList().getPlayer(party.getOwner()));
                     memberList.append("Owner: ").append(ownerName).append("\n");
 
                     memberList.append("Moderators: ");
@@ -336,9 +335,8 @@ public class ModCommands {
                         memberList.append("None");
                     } else {
                         party.getModerators().forEach(uuid -> {
-                            String modName = context.getSource().getServer()
-                                    .getPlayerList().getPlayer(uuid)
-                                    .getName().getString();
+                            String modName = getPlayerDisplayName(context.getSource().getServer()
+                                    .getPlayerList().getPlayer(uuid));
                             memberList.append(modName).append(", ");
                         });
                     }
@@ -348,9 +346,8 @@ public class ModCommands {
                     party.getMembers().stream()
                             .filter(uuid -> !party.getOwner().equals(uuid) && !party.getModerators().contains(uuid))
                             .forEach(uuid -> {
-                                String memberName = context.getSource().getServer()
-                                        .getPlayerList().getPlayer(uuid)
-                                        .getName().getString();
+                                String memberName = getPlayerDisplayName(context.getSource().getServer()
+                                        .getPlayerList().getPlayer(uuid));
                                 memberList.append(memberName).append(", ");
                             });
 
@@ -361,6 +358,20 @@ public class ModCommands {
                     player.sendSystemMessage(Component.literal("You are not in a party.").withStyle(ChatFormatting.RED));
                     return 0;
                 });
+    }
+
+    private static String getPlayerDisplayName(ServerPlayer player) {
+        if (player != null && ModConfig.COMMON.enableFakenameIntegration.get()) {
+            try {
+                net.minecraft.nbt.CompoundTag tag = player.getPersistentData();
+                if (tag.contains("fakename")) {
+                    return tag.getString("fakename");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return player != null ? player.getName().getString() : "Unknown";
     }
 
     private static int partyInfo(CommandContext<CommandSourceStack> context) throws com.mojang.brigadier.exceptions.CommandSyntaxException {
