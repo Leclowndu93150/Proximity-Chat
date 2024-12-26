@@ -19,46 +19,48 @@ public class ChatManager {
     public static void sendRangedMessage(ServerPlayer sender, String message, ChatRange range) {
         int maxDistance;
         ChatFormatting color;
-        String prefix;
+        Component prefix;
 
         switch (range) {
             case WHISPER:
                 maxDistance = ModConfig.COMMON.whisperDistance.get();
                 color = ModConfig.COMMON.whisperColor.get();
-                prefix = "*whispers*";
+                prefix = Component.literal("whispers ").withStyle(style -> style.withItalic(true).withColor(ChatFormatting.GRAY));
                 break;
             case YELL:
                 maxDistance = ModConfig.COMMON.yellDistance.get();
                 color = ModConfig.COMMON.yellColor.get();
-                prefix = "*yells*";
+                prefix = Component.literal("yells ").withStyle(style -> style.withItalic(true).withColor(ChatFormatting.GRAY));
                 break;
             default:
                 maxDistance = ModConfig.COMMON.normalDistance.get();
                 color = ModConfig.COMMON.normalColor.get();
-                prefix = "";
+                prefix = Component.empty();
                 break;
         }
 
         for (ServerPlayer player : sender.getServer().getPlayerList().getPlayers()) {
             double distance = sender.distanceTo(player);
             if (distance <= maxDistance) {
-                String distanceStr = formatDistance(distance);
-                String volumePrefix = range != ChatRange.NORMAL ? prefix + " " : "";
+                Component distanceText = Component.literal(String.format("(%s away) ", formatDistance(distance)))
+                        .withStyle(ChatFormatting.GRAY);
 
-                Component chatMessage = Component.literal(
-                        String.format("(%s away) %s[%s]: %s",
-                                distanceStr,
-                                volumePrefix,
-                                getDisplayName(sender),
-                                message
-                        )
-                ).withStyle(color);
+                Component nameText = Component.literal(String.format("[%s]: ", getDisplayName(sender)))
+                        .withStyle(color);
+
+                Component messageText = Component.literal(message)
+                        .withStyle(color);
+
+                Component finalMessage = prefix.copy()
+                        .append(distanceText)
+                        .append(nameText)
+                        .append(messageText);
 
                 if (distance > maxDistance * 0.8) {
-                    chatMessage = chatMessage.copy().withStyle(ChatFormatting.ITALIC);
+                    finalMessage = finalMessage.copy().withStyle(ChatFormatting.DARK_GRAY);
                 }
 
-                player.sendSystemMessage(chatMessage);
+                player.sendSystemMessage(finalMessage);
             }
         }
     }
