@@ -188,7 +188,7 @@ public class ModConfig {
 
             shoutCooldown = builder
                     .comment("Cooldown (in seconds) between shouts")
-                    .defineInRange("shoutCooldown", 0, 0, 3600);
+                    .defineInRange("shoutCooldown", 30, 0, 3600);
 
             proximityColor = builder
                     .comment("Color for proximity chat messages")
@@ -262,7 +262,7 @@ public class ModConfig {
 
             yellCooldown = builder
                     .comment("Cooldown (in seconds) between yells")
-                    .defineInRange("yellCooldown", 0, 0, 3600);
+                    .defineInRange("yellCooldown", 30, 0, 3600);
 
             builder.pop();
         }
@@ -295,7 +295,7 @@ public class ModConfig {
     public static class ForgeEvents {
         @SubscribeEvent
         public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
-            if (event.getEntity().level.isClientSide()) return;
+            if (event.getEntity().level().isClientSide()) return;
 
             NETWORK.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer)event.getEntity()),
                     new ConfigSyncPacket(COMMON));

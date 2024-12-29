@@ -77,7 +77,7 @@ public class ProximityChatMod {
     }
 
     @SubscribeEvent
-    public void onChat(ServerChatEvent.Submitted event) {
+    public void onChat(ServerChatEvent event) {
         if (event.getPlayer() == null) return;
 
         if (event.getRawText().isEmpty()) {
