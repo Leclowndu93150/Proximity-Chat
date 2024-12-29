@@ -19,72 +19,66 @@ import java.util.List;
 
 public class ModCommands {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+        // Party commands
+        dispatcher.register(Commands.literal("party")
+                .then(Commands.literal("create")
+                        .then(Commands.argument("name", StringArgumentType.word())
+                                .executes(context -> createParty(context))))
+                .then(Commands.literal("invite")
+                        .then(Commands.argument("player", EntityArgument.player())
+                                .executes(context -> invitePlayer(context))))
+                .then(Commands.literal("join")
+                        .then(Commands.argument("name", StringArgumentType.word())
+                                .executes(context -> joinParty(context))))
+                .then(Commands.literal("leave")
+                        .executes(context -> leaveParty(context)))
+                .then(Commands.literal("kick")
+                        .then(Commands.argument("player", EntityArgument.player())
+                                .executes(context -> kickPlayer(context))))
+                .then(Commands.literal("promote")
+                        .then(Commands.argument("player", EntityArgument.player())
+                                .executes(context -> promotePlayer(context))))
+                .then(Commands.literal("demote")
+                        .then(Commands.argument("player", EntityArgument.player())
+                                .executes(context -> demotePlayer(context))))
+                .then(Commands.literal("disband")
+                        .executes(context -> disbandParty(context)))
+                .then(Commands.literal("list")
+                        .executes(context -> listPartyMembers(context)))
+                .then(Commands.literal("info")
+                        .executes(context -> partyInfo(context))));
 
-        dispatcher.register(Commands.literal("proximitychat")
-                .then(Commands.literal("party")
-                        .then(Commands.literal("create")
-                                .then(Commands.argument("name", StringArgumentType.word())
-                                        .executes(context -> createParty(context))))
+        // Party chat toggle command
+        dispatcher.register(Commands.literal("pc")
+                .executes(context -> togglePartyChat(context)));
 
-                        .then(Commands.literal("invite")
-                                .then(Commands.argument("player", EntityArgument.player())
-                                        .executes(context -> invitePlayer(context))))
+        dispatcher.register(Commands.literal("partychat")
+                .executes(context -> togglePartyChat(context)));
 
-                        .then(Commands.literal("join")
-                                .then(Commands.argument("name", StringArgumentType.word())
-                                        .executes(context -> joinParty(context))))
+        // Chat range commands
+        dispatcher.register(Commands.literal("shout")
+                .then(Commands.argument("message", StringArgumentType.greedyString())
+                        .executes(context -> shout(context))));
 
-                        .then(Commands.literal("leave")
-                                .executes(context -> leaveParty(context)))
+        dispatcher.register(Commands.literal("s")
+                .then(Commands.argument("message", StringArgumentType.greedyString())
+                        .executes(context -> shout(context))));
 
-                        .then(Commands.literal("kick")
-                                .then(Commands.argument("player", EntityArgument.player())
-                                        .executes(context -> kickPlayer(context))))
+        dispatcher.register(Commands.literal("whisper")
+                .then(Commands.argument("message", StringArgumentType.greedyString())
+                        .executes(context -> whisperMessage(context))));
 
-                        .then(Commands.literal("promote")
-                                .then(Commands.argument("player", EntityArgument.player())
-                                        .executes(context -> promotePlayer(context))))
+        dispatcher.register(Commands.literal("w")
+                .then(Commands.argument("message", StringArgumentType.greedyString())
+                        .executes(context -> whisperMessage(context))));
 
-                        .then(Commands.literal("demote")
-                                .then(Commands.argument("player", EntityArgument.player())
-                                        .executes(context -> demotePlayer(context))))
+        dispatcher.register(Commands.literal("yell")
+                .then(Commands.argument("message", StringArgumentType.greedyString())
+                        .executes(context -> yellMessage(context))));
 
-                        .then(Commands.literal("disband")
-                                .executes(context -> disbandParty(context)))
-
-                        .then(Commands.literal("list")
-                                .executes(context -> listPartyMembers(context)))
-
-                        .then(Commands.literal("info")
-                                .executes(context -> partyInfo(context))))
-
-                .then(Commands.literal("pc")
-                        .executes(context -> togglePartyChat(context)))
-
-                .then(Commands.literal("partychat")
-                        .executes(context -> togglePartyChat(context)))
-
-                .then(Commands.literal("shout")
-                        .then(Commands.argument("message", StringArgumentType.greedyString())
-                                .executes(context -> shout(context))))
-
-                .then(Commands.literal("s")
-                        .then(Commands.argument("message", StringArgumentType.greedyString())
-                                .executes(context -> shout(context)))));
-
-        dispatcher.register(Commands.literal("proximitychat")
-                .then(Commands.literal("whisper")
-                        .then(Commands.argument("message", StringArgumentType.greedyString())
-                                .executes(context -> whisperMessage(context))))
-                .then(Commands.literal("w")
-                        .then(Commands.argument("message", StringArgumentType.greedyString())
-                                .executes(context -> whisperMessage(context))))
-                .then(Commands.literal("yell")
-                        .then(Commands.argument("message", StringArgumentType.greedyString())
-                                .executes(context -> yellMessage(context))))
-                .then(Commands.literal("y")
-                        .then(Commands.argument("message", StringArgumentType.greedyString())
-                                .executes(context -> yellMessage(context)))));
+        dispatcher.register(Commands.literal("y")
+                .then(Commands.argument("message", StringArgumentType.greedyString())
+                        .executes(context -> yellMessage(context))));
     }
 
     private static int createParty(CommandContext<CommandSourceStack> context) throws com.mojang.brigadier.exceptions.CommandSyntaxException {

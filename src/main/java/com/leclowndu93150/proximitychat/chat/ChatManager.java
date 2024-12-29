@@ -45,7 +45,7 @@ public class ChatManager {
                 Component distanceText = Component.literal(String.format("(%s away) ", formatDistance(distance)))
                         .withStyle(ChatFormatting.GRAY);
 
-                Component nameText = Component.literal(String.format("[%s]: ", getDisplayName(sender)))
+                Component nameText = Component.literal(String.format("[%s] ", getDisplayName(sender)))  // Added space here
                         .withStyle(color);
 
                 Component messageText = Component.literal(message)
@@ -72,15 +72,12 @@ public class ChatManager {
         for (ServerPlayer player : sender.getServer().getPlayerList().getPlayers()) {
             double distance = sender.distanceTo(player);
             if (distance <= maxDistance) {
-                // Format: (50m away) [Player]: message
                 Component finalMessage = Component.empty()
                         .append(Component.literal(String.format("(%dm away) ", (int)distance))
                                 .withStyle(ChatFormatting.GRAY))
                         .append(Component.literal("[")
                                 .withStyle(color))
-                        .append(Component.literal(getDisplayName(sender))
-                                .withStyle(color))
-                        .append(Component.literal("]: ")
+                        .append(Component.literal(getDisplayName(sender) + "] ")  // Added space here
                                 .withStyle(color))
                         .append(Component.literal(message)
                                 .withStyle(color));
@@ -95,14 +92,13 @@ public class ChatManager {
 
         for (ServerPlayer player : sender.getServer().getPlayerList().getPlayers()) {
             if (party.getMembers().contains(player.getUUID())) {
-                Component chatMessage = Component.literal(
-                        String.format("(%s) (%dm away) [%s]: %s",
-                                party.getName(),
-                                (int) sender.distanceTo(player),
-                                getDisplayName(sender),
-                                message
-                        )
-                ).withStyle(color);
+                Component chatMessage = Component.literal("")
+                        .withStyle(color)
+                        .append(Component.literal(String.format("(%s) ", party.getName())))
+                        .append(Component.literal(String.format("(%dm away) ", (int) sender.distanceTo(player))))
+                        .append(Component.literal(String.format("[%s] ", getDisplayName(sender))))  // Added space here
+                        .append(Component.literal(message));
+
                 player.sendSystemMessage(chatMessage);
             }
         }

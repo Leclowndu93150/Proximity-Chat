@@ -34,6 +34,7 @@ public class ProximityChatMod {
         ModLoadingContext.get().registerConfig(Type.COMMON, ModConfig.COMMON_SPEC);
 
         MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.register(ModConfig.class);
 
         LOGGER.info("Proximity Chat Mod initialized");
     }

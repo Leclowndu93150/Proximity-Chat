@@ -69,8 +69,9 @@ public class PartyManager {
         if (party != null) {
             for (UUID member : party.getMembers()) {
                 PlayerData data = playerData.get(member);
-                if (data != null && name.equals(data.getCurrentParty())) {
+                if (data != null) {
                     data.setCurrentParty(null);
+                    data.setPartyChatEnabled(false);
                     DataManager.saveJson("players", member.toString(), data);
                 }
             }
@@ -84,6 +85,13 @@ public class PartyManager {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
+            playerData.values().stream()
+                    .filter(data -> name.equals(data.getCurrentParty()))
+                    .forEach(data -> {
+                        data.setCurrentParty(null);
+                        data.setPartyChatEnabled(false);
+                    });
         }
     }
 
