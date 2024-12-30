@@ -179,21 +179,4 @@ public class ModConfig {
         }
     }
 
-    public static int getProximityDistance() { return proximityDistance; }
-    public static int getShoutCooldown() { return shoutCooldown; }
-    public static ChatFormatting getProximityColor() { return proximityColor; }
-    public static ChatFormatting getPartyColor() { return partyColor; }
-    public static ChatFormatting getShoutColor() { return shoutColor; }
-    public static boolean isEnableFakenameIntegration() { return enableFakenameIntegration; }
-    public static boolean isEnableChatHeadsIntegration() { return enableChatHeadsIntegration; }
-    public static List<? extends String> getBannedPartyNames() { return bannedPartyNames; }
-    public static int getMaxPartySize() { return maxPartySize; }
-    public static boolean isPersistPartiesOnRestart() { return persistPartiesOnRestart; }
-    public static int getWhisperDistance() { return whisperDistance; }
-    public static int getNormalDistance() { return normalDistance; }
-    public static int getYellDistance() { return yellDistance; }
-    public static ChatFormatting getWhisperColor() { return whisperColor; }
-    public static ChatFormatting getNormalColor() { return normalColor; }
-    public static ChatFormatting getYellColor() { return yellColor; }
-    public static int getYellCooldown() { return yellCooldown; }
 }
