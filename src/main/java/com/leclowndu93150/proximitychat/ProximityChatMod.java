@@ -5,20 +5,17 @@ import com.leclowndu93150.proximitychat.command.ModCommands;
 import com.leclowndu93150.proximitychat.config.ModConfig;
 import com.leclowndu93150.proximitychat.data.DataManager;
 import com.leclowndu93150.proximitychat.party.PartyManager;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.ServerChatEvent;
-import net.minecraftforge.event.server.ServerStartedEvent;
-import net.minecraftforge.event.server.ServerStoppingEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig.Type;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.event.RegisterCommandsEvent;
-import net.minecraftforge.fml.loading.FMLLoader;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.ModList;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.RegisterCommandsEvent;
+import net.neoforged.neoforge.event.ServerChatEvent;
+import net.neoforged.neoforge.event.server.ServerStartedEvent;
+import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -27,14 +24,11 @@ public class ProximityChatMod {
     public static final String MOD_ID = "proximitychat";
     public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 
-    public ProximityChatMod() {
-        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+    public ProximityChatMod(IEventBus modEventBus, ModContainer modContainer) {
+        LOGGER.info("Proximity Chat Mod initializing");
+        modContainer.registerConfig(net.neoforged.fml.config.ModConfig.Type.SERVER, ModConfig.SERVER_SPEC);
         modEventBus.addListener(this::setup);
-
-        ModLoadingContext.get().registerConfig(Type.COMMON, ModConfig.COMMON_SPEC);
-
-        MinecraftForge.EVENT_BUS.register(this);
-        MinecraftForge.EVENT_BUS.register(ModConfig.class);
+        NeoForge.EVENT_BUS.register(this);
 
         LOGGER.info("Proximity Chat Mod initialized");
     }
@@ -43,11 +37,11 @@ public class ProximityChatMod {
         LOGGER.info("Proximity Chat Mod setup starting");
 
         event.enqueueWork(() -> {
-            if (ModConfig.COMMON.enableFakenameIntegration.get() && ModList.get().isLoaded("fakename")) {
+            if (ModList.get().isLoaded("fakename")) {
                 LOGGER.info("Fakename integration enabled");
             }
 
-            if (ModConfig.COMMON.enableChatHeadsIntegration.get() && ModList.get().isLoaded("chatheads")) {
+            if (ModList.get().isLoaded("chatheads")) {
                 LOGGER.info("Chat Heads integration enabled");
             }
         });
